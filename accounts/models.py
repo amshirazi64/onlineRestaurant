@@ -11,7 +11,7 @@ from django.contrib.auth.models import (
 class UserManager(BaseUserManager):
     """Manager for user."""
 
-    def create_user(self, first_name, last_name, username, email, phone_number, password=None):
+    def create_user(self, first_name, last_name, username, email,  password=None):
         """Create, save and return a new user."""
         if not email:
             raise ValueError("User must have an email address.")
@@ -24,7 +24,6 @@ class UserManager(BaseUserManager):
             username = username,
             first_name = first_name,
             last_name = last_name,
-            phone_number = phone_number,
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -38,6 +37,7 @@ class UserManager(BaseUserManager):
             password = password,
             first_name = first_name,
             last_name = last_name,
+
         )
         user.is_admin = True
         user.is_active = True
@@ -90,6 +90,13 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+    def get_role(self):
+        if self.role == 1:
+            user_role = 'Vendor'
+        elif self.role == 2:
+            user_role = 'Customer'
+        return user_role
 
 
 class UserProfile(models.Model):
